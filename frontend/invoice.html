@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الفواتير الرسمية | p2p‑x</title>
+<style>
+  body { font-family: Tahoma; direction:rtl; background:#f5f5f5; padding:20px; }
+  table { width:100%; border-collapse:collapse; margin-top:20px; }
+  th, td { border:1px solid #ccc; padding:10px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<h2>🧾 الفواتير الرسمية لعمليات التبادل</h2>
+
+<table id="inv_table"></table>
+
+<script>
+async function loadInvoices() {
+  const res = await fetch("/invoices");
+  const data = await res.json();
+  let html = "<tr><th>رقم الفاتورة</th><th>المستخدم</th><th>المبلغ</th><th>الحالة</th><th>رابط الدفع</th></tr>";
+  data.forEach(i => {
+    html += `<tr>
+      <td>${i.invoice_id}</td>
+      <td>${i.user_id}</td>
+      <td>${i.amount}</td>
+      <td>${i.status}</td>
+      <td><a href='${i.invoice_url}' target='_blank'>فتح</a></td>
+    </tr>`;
+  });
+  inv_table.innerHTML = html;
+}
+loadInvoices();
+</script>
+
+</body>
+</html>
