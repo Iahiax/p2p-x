@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>محفظتي | p2p‑x</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-100" id="body">
+
+<div class="p-4 bg-blue-900 text-white flex justify-between items-center">
+  <div>
+    <h1 class="text-xl font-bold">محفظتي في p2p‑x</h1>
+    <p class="text-xs opacity-80">رصيد العملات الرقمية والورقية + مستوى التعدين.</p>
+  </div>
+  <button onclick="toggleTheme()" class="text-xs bg-white/20 px-3 py-1 rounded">
+    تبديل الوضع
+  </button>
+</div>
+
+<div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">💻 محفظة العملات الرقمية</h2>
+    <table id="digital_table" class="w-full text-sm border border-gray-300 dark:border-gray-700"></table>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">💵 محفظة العملات الورقية</h2>
+    <table id="fiat_table" class="w-full text-sm border border-gray-300 dark:border-gray-700"></table>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow md:col-span-2">
+    <h2 class="font-bold mb-2">⚙️ إدارة المحفظة</h2>
+
+    <div id="level_box" class="text-xs mb-3 bg-blue-50 dark:bg-blue-900/40 p-2 rounded">
+      المستوى: ... — XP: ... — مضاعف المكافآت: ...
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div>
+        <h3 class="font-semibold mb-1">إيداع</h3>
+        <input id="dep_currency" class="w-full mb-1 border rounded px-2 py-1" placeholder="USDT أو USD">
+        <input id="dep_amount" type="number" class="w-full mb-1 border rounded px-2 py-1" placeholder="المبلغ">
+        <button onclick="deposit()" class="bg-green-600 text-white px-3 py-1 rounded">تنفيذ الإيداع</button>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-1">سحب</h3>
+        <input id="wd_currency" class="w-full mb-1 border rounded px-2 py-1" placeholder="USDT أو USD">
+        <input id="wd_amount" type="number" class="w-full mb-1 border rounded px-2 py-1" placeholder="المبلغ">
+        <button onclick="withdraw()" class="bg-red-600 text-white px-3 py-1 rounded">تنفيذ السحب</button>
+      </div>
+
+      <div>
+        <h3 class="font-semibold mb-1">تحويل بين USDT و USD</h3>
+        <input id="tr_amount" type="number" class="w-full mb-1 border rounded px-2 py-1" placeholder="المبلغ">
+        <button onclick="transfer()" class="bg-blue-600 text-white px-3 py-1 rounded">تنفيذ التحويل</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const USER_ID = "telegram_user_id"; // تستبدلها بقيمة فعلية من البوت أو الـ session
+
+function toggleTheme() {
+  document.getElementById('body').classList.toggle('dark');
+}
+
+async function loadWallets() {
+  const r1 = await fetch(`/wallets/digital?user_id=${USER_ID}`);
+  const digital = await r1.json();
+  const r2 = await fetch(`/wallets/fiat?user_id=${USER_ID}`);
+  const fiat = await r2.json();
+  const r3 = await fetch(`/levels?user_id=${USER_ID}`);
+  const lvl = await r3.json();
+
+  document.getElementById("level_box").innerText =
+    `المستوى: ${lvl.level} — XP: ${lvl.xp} — مضاعف المكافآت: ${lvl.multiplier}x`;
+
+  let dhtml = "<tr class='bg-gray-200 dark:bg-gray-700'><th class='border p-2'>الشبكة</th><th class='border p-2'>العنوان</th></tr>";
+  digital.forEach(w => {
+    dhtml += `<tr>
+      <td class='border p-2'>${w.network}</td>
+      <td class='border p-2 text-xs'>${w.address}</td>
+    </tr>`;
+  });
+  digital_table.innerHTML = dhtml;
+
+  let fhtml = "<tr class='bg-gray-200 dark:bg-gray-700'><th class='border p-2'>العملة</th><th class='border p-2'>الرصيد</th></tr>";
+  fiat.forEach(w => {
+    fhtml += `<tr>
+      <td class='border p-2'>${w.currency}</td>
+      <td class='border p-2'>${w.balance}</td>
+    </tr>`;
+  });
+  fiat_table.innerHTML = fhtml;
+}
+
+async function deposit() {
+  await fetch("/wallets/deposit", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({user_id: USER_ID, currency: dep_currency.value, amount: parseFloat(dep_amount.value)})
+  });
+  loadWallets();
+}
+
+async function withdraw() {
+  await fetch("/wallets/withdraw", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({user_id: USER_ID, currency: wd_currency.value, amount: parseFloat(wd_amount.value)})
+  });
+  loadWallets();
+}
+
+async function transfer() {
+  await fetch("/wallets/transfer", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({user_id: USER_ID, amount: parseFloat(tr_amount.value)})
+  });
+  loadWallets();
+}
+
+loadWallets();
+</script>
+
+</body>
+</html>
