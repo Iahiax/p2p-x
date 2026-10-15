@@ -4,6 +4,8 @@ from backend.wallets.digital_wallets import list_user_wallets, create_user_walle
 from backend.wallets.fiat_wallets import list_fiat_wallets, deposit, withdraw
 from backend.mining.mining_engine import mining_tick
 from backend.mining.levels_engine import get_level
+from backend.admin.admin_routes import router as admin_router
+app.include_router(admin_router)
 
 app = FastAPI()
 
