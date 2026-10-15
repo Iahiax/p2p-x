@@ -4,18 +4,17 @@ from backend.exchange_connectors.binance import get_binance_price
 
 async def mm_quote(src_token: str, dst_token: str, amount: float):
     """
-    Market Maker بسيط:
-    - يجلب سعر من Binance
-    - يضيف سبريد بسيط
-    - يحسب القيمة النهائية والرسوم
+    Market Maker بسيط يعتمد على Binance:
+    - يجلب سعر حقيقي
+    - يضيف سبريد
+    - يحسب القيمة النهائية
     """
-    symbol = f"{src_token}{dst_token}"  # مثال: BTCUSDT, ETHUSDT, USDTUSD (لو متاح)
+    symbol = f"{src_token}{dst_token}"  # مثال BTCUSDT
 
     try:
         price = await get_binance_price(symbol)
     except Exception:
-        # في حال فشل جلب السعر، نستخدم سعر افتراضي
-        price = 1.0
+        price = 1.0  # fallback
 
     spread = 0.003  # 0.3%
     final_rate = price * (1 - spread)
@@ -29,5 +28,5 @@ async def mm_quote(src_token: str, dst_token: str, amount: float):
         "rate": final_rate,
         "final_amount": final_amount,
         "fee": fee,
-        "mode": "MM"
+        "mode": "MM_BINANCE"
     }
