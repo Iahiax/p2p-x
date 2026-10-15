@@ -1,15 +1,23 @@
-import httpx
+# backend/market_maker.py
+
+from backend.exchange_connectors.binance import get_binance_price
 
 async def mm_quote(src_token: str, dst_token: str, amount: float):
-    symbol = f"{src_token}{dst_token}"  # مثل BTCUSDT
+    """
+    Market Maker بسيط:
+    - يجلب سعر من Binance
+    - يضيف سبريد بسيط
+    - يحسب القيمة النهائية والرسوم
+    """
+    symbol = f"{src_token}{dst_token}"  # مثال: BTCUSDT, ETHUSDT, USDTUSD (لو متاح)
+
     try:
-        async with httpx.AsyncClient() as client:
-            r = await client.get("https://api.binance.com/api/v3/ticker/price", params={"symbol": symbol})
-            price = float(r.json()["price"])
-    except:
+        price = await get_binance_price(symbol)
+    except Exception:
+        # في حال فشل جلب السعر، نستخدم سعر افتراضي
         price = 1.0
 
-    spread = 0.003
+    spread = 0.003  # 0.3%
     final_rate = price * (1 - spread)
     final_amount = amount * final_rate
     fee = amount * spread
