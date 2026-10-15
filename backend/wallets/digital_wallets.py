@@ -3,24 +3,23 @@ from cryptography.fernet import Fernet
 from backend.db import get_conn
 import os
 
-WALLET_KEY = os.getenv("WALLET_KEY")
+WALLET_KEY = os.getenv("WALLET_KEY")  # يجب أن يكون 32 بايت قوي جدًا
+fernet = Fernet(WALLET_KEY.encode())
 
-def create_eth_wallet():
+def generate_wallet():
     acct = Account.create()
     return acct.address, acct.key.hex()
 
 async def create_user_wallet(user_id: str, network: str = "Ethereum"):
-    address, pk = create_eth_wallet()
-    f = Fernet(WALLET_KEY.encode())
-    enc_pk = f.encrypt(pk.encode()).decode()
+    address, pk = generate_wallet()
+    encrypted_pk = fernet.encrypt(pk.encode()).decode()
 
     conn = await get_conn()
     await conn.execute("""
         INSERT INTO user_wallets (user_id, network, address, encrypted_private_key)
         VALUES ($1,$2,$3,$4)
-    """, user_id, network, address, enc_pk)
+    """, user_id, network, address, encrypted_pk)
     await conn.close()
-    return {"user_id": user_id, "network": network, "address": address}
 
 async def list_user_wallets(user_id: str):
     conn = await get_conn()
