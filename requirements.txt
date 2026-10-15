@@ -1,2 +1,7 @@
 fastapi
-uvicorn
+uvicorn[standard]
+asyncpg
+httpx
+python-telegram-bot==20.6
+cryptography
+eth-account
