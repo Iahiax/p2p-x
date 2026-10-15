@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>OTC صفقات كبيرة | p2p‑x</title>
+<style>
+  body { font-family: Tahoma; direction:rtl; background:#f0f2f5; padding:20px; }
+  .card { background:#fff; padding:20px; border-radius:8px; border:1px solid #ccc; margin-bottom:20px; }
+  label { display:block; margin-top:10px; }
+  input { width:100%; padding:10px; margin-top:4px; border:1px solid #ccc; border-radius:4px; }
+  button { padding:10px 16px; margin-top:12px; background:#0057b8; color:#fff; border:none; border-radius:4px; cursor:pointer; }
+  table { width:100%; border-collapse:collapse; margin-top:20px; }
+  th, td { border:1px solid #ccc; padding:10px; font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>💼 نظام OTC للصفقات الكبيرة</h2>
+
+  <label>المنطقة</label><input id="region" value="GLOBAL">
+  <label>المبلغ (USD)</label><input id="amount" type="number" value="20000">
+
+  <button onclick="findOTC()">بحث عن أفضل وسيط</button>
+</div>
+
+<div class="card">
+  <table id="otc_table"></table>
+</div>
+
+<script>
+async function findOTC() {
+  const p = new URLSearchParams({ amount: amount.value, region: region.value });
+  const res = await fetch(`/otc_best?${p}`);
+  const data = await res.json();
+
+  let html = "<tr><th>الوسيط</th><th>المنطقة</th><th>الحد الأدنى</th><th>الحد الأقصى</th><th>الثقة</th></tr>";
+  data.all.forEach(r => {
+    html += `<tr>
+      <td>${r.name}</td>
+      <td>${r.region}</td>
+      <td>${r.min_amount}</td>
+      <td>${r.max_amount}</td>
+      <td>${r.reliability_score}</td>
+    </tr>`;
+  });
+  otc_table.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
