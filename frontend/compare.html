@@ -1,39 +1,48 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>مقارنة أسعار البروتوكولات | p2p‑x</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-  body { font-family: Tahoma; direction:rtl; background:#f0f2f5; margin:0; padding:20px; }
-  .card { background:#fff; padding:20px; border-radius:8px; border:1px solid #d0d4da; margin-bottom:20px; }
-  label { display:block; margin-top:10px; }
-  input { width:100%; padding:10px; margin-top:4px; border:1px solid #ccc; border-radius:4px; }
-  button { padding:10px 16px; margin-top:12px; background:#0057b8; color:#fff; border:none; border-radius:4px; cursor:pointer; }
-  table { width:100%; border-collapse:collapse; margin-top:20px; }
-  th, td { border:1px solid #ccc; padding:10px; font-size:13px; }
-</style>
 </head>
-<body>
 
-<div class="card">
-  <h2>📊 مقارنة أسعار البروتوكولات</h2>
+<body class="bg-gray-100">
 
-  <label>شبكة من</label><input id="src_network" value="Ethereum">
-  <label>شبكة إلى</label><input id="dst_network" value="Arbitrum">
-  <label>عملة من</label><input id="src_token" value="USDT">
-  <label>عملة إلى</label><input id="dst_token" value="USDC">
-  <label>الكمية</label><input id="amount" type="number" value="100">
-
-  <button onclick="compare()">عرض المقارنة</button>
+<div class="p-4 bg-blue-900 text-white">
+  <h1 class="text-xl font-bold">📊 مقارنة أسعار البروتوكولات</h1>
+  <p class="text-xs opacity-80">عرض أفضل الأسعار بين البروتوكولات مع رسوم بيانية.</p>
 </div>
 
-<div class="card">
+<div class="p-4 max-w-xl mx-auto bg-white rounded shadow mt-4">
+
+  <label class="block text-sm mb-1">شبكة من</label>
+  <input id="src_network" class="w-full border rounded px-2 py-1 mb-2" value="Ethereum">
+
+  <label class="block text-sm mb-1">شبكة إلى</label>
+  <input id="dst_network" class="w-full border rounded px-2 py-1 mb-2" value="Arbitrum">
+
+  <label class="block text-sm mb-1">عملة من</label>
+  <input id="src_token" class="w-full border rounded px-2 py-1 mb-2" value="USDT">
+
+  <label class="block text-sm mb-1">عملة إلى</label>
+  <input id="dst_token" class="w-full border rounded px-2 py-1 mb-2" value="USDC">
+
+  <label class="block text-sm mb-1">الكمية</label>
+  <input id="amount" type="number" class="w-full border rounded px-2 py-1 mb-4" value="100">
+
+  <button onclick="compare()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+    عرض المقارنة
+  </button>
+
+</div>
+
+<div class="p-4 max-w-3xl mx-auto bg-white rounded shadow mt-4">
   <canvas id="chart" height="120"></canvas>
 </div>
 
-<div class="card">
-  <table id="compare_table"></table>
+<div class="p-4 max-w-3xl mx-auto bg-white rounded shadow mt-4">
+  <table id="compare_table" class="w-full text-sm border border-gray-300"></table>
 </div>
 
 <script>
@@ -54,17 +63,27 @@ async function compare() {
 
   new Chart(document.getElementById('chart'), {
     type: 'bar',
-    data: { labels, datasets: [{ label: 'القيمة النهائية', data: values, backgroundColor:'#0057b8' }] },
-    options: { responsive:true, plugins:{legend:{display:false}} }
+    data: {
+      labels,
+      datasets: [{
+        label: 'القيمة النهائية',
+        data: values,
+        backgroundColor: '#0057b8'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } }
+    }
   });
 
-  let html = "<tr><th>البروتوكول</th><th>القيمة النهائية</th><th>الرسوم</th><th>الوقت</th></tr>";
+  let html = "<tr class='bg-gray-200'><th class='border p-2'>البروتوكول</th><th class='border p-2'>القيمة النهائية</th><th class='border p-2'>الرسوم</th><th class='border p-2'>الوقت</th></tr>";
   data.all.forEach(r => {
     html += `<tr>
-      <td>${r.protocol}</td>
-      <td>${r.final_amount}</td>
-      <td>${r.fee}</td>
-      <td>${r.eta_seconds} ثانية</td>
+      <td class='border p-2'>${r.protocol}</td>
+      <td class='border p-2'>${r.final_amount}</td>
+      <td class='border p-2'>${r.fee}</td>
+      <td class='border p-2'>${r.eta_seconds} ثانية</td>
     </tr>`;
   });
   compare_table.innerHTML = html;
