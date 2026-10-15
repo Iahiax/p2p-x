@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>p2p‑x Mini App</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { darkMode: 'class' }
+</script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-100" id="body">
+
+<div class="p-4 flex justify-between items-center bg-blue-900 dark:bg-blue-950 text-white">
+  <div>
+    <h1 class="text-xl font-bold">منصة p2p‑x العالمية</h1>
+    <p class="text-xs opacity-80">تبادل عملات، فواتير رسمية، OTC، تعدين، ومحافظ رقمية وورقية.</p>
+  </div>
+  <button onclick="toggleTheme()" class="text-xs bg-white/20 px-3 py-1 rounded">
+    تبديل الوضع (Dark / Light)
+  </button>
+</div>
+
+<div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">🔁 تبادل العملات (Swap)</h2>
+    <p class="text-xs mb-3">تنفيذ عمليات تبادل بين الشبكات والبروتوكولات.</p>
+    <button onclick="location.href='/swap.html'" class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+      فتح واجهة Swap
+    </button>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">📊 مقارنة الأسعار (Compare)</h2>
+    <p class="text-xs mb-3">عرض أفضل الأسعار بين البروتوكولات مع رسوم بيانية.</p>
+    <button onclick="location.href='/compare.html'" class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+      فتح واجهة Compare
+    </button>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">💼 نظام OTC</h2>
+    <p class="text-xs mb-3">إدارة الصفقات الكبيرة عبر وسطاء معتمدين.</p>
+    <button onclick="location.href='/otc.html'" class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+      فتح واجهة OTC
+    </button>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">🧾 الفواتير الرسمية</h2>
+    <p class="text-xs mb-3">عرض الفواتير الصادرة عبر PayProGlobal.</p>
+    <button onclick="location.href='/invoice.html'" class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+      فتح واجهة الفواتير
+    </button>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow">
+    <h2 class="font-bold mb-2">💻 محفظتي</h2>
+    <p class="text-xs mb-3">عرض رصيد العملات الرقمية والورقية، مع إدارة الإيداع والسحب والتحويل.</p>
+    <button onclick="location.href='/my_wallet.html'" class="bg-green-600 text-white px-4 py-2 rounded text-sm">
+      فتح واجهة محفظتي
+    </button>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-4 rounded shadow md:col-span-2">
+    <h2 class="font-bold mb-2">🛡️ لوحة التحكم للمسؤول (Admin Panel)</h2>
+    <p class="text-xs mb-3">مراقبة AML، الاحتيال، السيولة، الفواتير، والوسطاء.</p>
+    <button onclick="location.href='/admin.html'" class="bg-red-600 text-white px-4 py-2 rounded text-sm">
+      فتح لوحة التحكم
+    </button>
+  </div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  document.getElementById('body').classList.toggle('dark');
+}
+</script>
+
+</body>
+</html>
