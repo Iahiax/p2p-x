@@ -1,0 +1,40 @@
+p2px-app/
+│
+├── backend/
+│   ├── main.py
+│   ├── auth.py
+│   ├── db.py
+│   ├── aml_ai.py
+│   ├── fraud.py
+│   ├── market_maker.py
+│   ├── swap_engine.py
+│   ├── compare_engine.py
+│   ├── otc_ai.py
+│   ├── paypro.py
+│   ├── logging.py
+│   ├── liquidity.py
+│   ├── wallets/
+│   │   ├── digital_wallets.py
+│   │   └── fiat_wallets.py
+│   ├── mining/
+│   │   ├── levels_engine.py
+│   │   └── mining_engine.py
+│   └── admin/
+│       ├── admin_routes.py
+│       └── admin_protect.py
+│
+├── frontend/
+│   ├── index.html
+│   ├── my_wallet.html
+│   ├── admin.html
+│   ├── swap.html
+│   ├── compare.html
+│   ├── otc.html
+│   ├── invoice.html
+│
+├── sql/
+│   └── schema.sql
+│
+├── Dockerfile
+├── fly.toml
+└── requirements.txt
