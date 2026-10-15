@@ -10,7 +10,7 @@
 <div class="bg-blue-900 text-white p-6 shadow flex justify-between items-center">
   <div>
     <h1 class="text-2xl font-bold">لوحة التحكم الرسمية — p2p‑x</h1>
-    <p class="text-sm opacity-80">مراقبة العمليات، AML، الاحتيال، السيولة، الفواتير، والوسطاء.</p>
+    <p class="text-sm opacity-80">مراقبة العمليات، AML، الاحتيال، السيولة.</p>
   </div>
   <div class="text-xs">
     <span id="admin_user">مسؤول</span>
@@ -21,33 +21,23 @@
 
   <div class="bg-white p-4 rounded shadow">
     <h2 class="text-lg font-bold mb-3">📜 آخر عمليات Swap</h2>
-    <table id="ops_table" class="w-full text-sm border"></table>
-  </div>
-
-  <div class="bg-white p-4 rounded shadow">
-    <h2 class="text-lg font-bold mb-3">🧾 الفواتير</h2>
-    <table id="inv_table" class="w-full text-sm border"></table>
+    <table id="ops_table" class="w-full text-sm border border-gray-300"></table>
   </div>
 
   <div class="bg-white p-4 rounded shadow">
     <h2 class="text-lg font-bold mb-3">⚠️ إنذارات AML / Fraud</h2>
-    <table id="aml_table" class="w-full text-sm border"></table>
+    <table id="aml_table" class="w-full text-sm border border-gray-300"></table>
   </div>
 
   <div class="bg-white p-4 rounded shadow">
     <h2 class="text-lg font-bold mb-3">💧 حالة السيولة</h2>
-    <table id="liq_table" class="w-full text-sm border"></table>
-  </div>
-
-  <div class="bg-white p-4 rounded shadow">
-    <h2 class="text-lg font-bold mb-3">💼 وسطاء OTC</h2>
-    <table id="otc_table" class="w-full text-sm border"></table>
+    <table id="liq_table" class="w-full text-sm border border-gray-300"></table>
   </div>
 
 </div>
 
 <script>
-const ADMIN_TOKEN = localStorage.getItem("admin_token"); // يجب أن يكون JWT من الـ backend
+const ADMIN_TOKEN = localStorage.getItem("admin_token"); // يجب أن يكون JWT من backend
 
 if (!ADMIN_TOKEN) {
   alert("غير مصرح لك بالدخول إلى لوحة التحكم.");
@@ -59,7 +49,7 @@ async function loadTable(endpoint, elementId, columns) {
     headers: { "Authorization": `Bearer ${ADMIN_TOKEN}` }
   });
   if (!res.ok) {
-    document.getElementById(elementId).innerHTML = "<tr><td>خطأ في التحميل أو غير مصرح</td></tr>";
+    document.getElementById(elementId).innerHTML = "<tr><td class='p-2'>خطأ في التحميل أو غير مصرح</td></tr>";
     return;
   }
   const data = await res.json();
@@ -75,19 +65,14 @@ async function loadTable(endpoint, elementId, columns) {
 }
 
 loadTable("/admin/operations", "ops_table",
-  ["user_id","src_network","dst_network","amount","chosen_protocol"]);
-
-loadTable("/admin/invoices", "inv_table",
-  ["invoice_id","user_id","amount","status"]);
+  ["user_id","src_network","dst_network","src_token","dst_token","amount","chosen_protocol","created_at"]);
 
 loadTable("/admin/alerts", "aml_table",
-  ["user_id","type","details"]);
+  ["user_id","type","details","score","created_at"]);
 
 loadTable("/admin/liquidity", "liq_table",
-  ["asset","balance","min_required","status"]);
+  ["asset","balance","min_required","id"]);
 
-loadTable("/admin/otc", "otc_table",
-  ["name","region","min_amount","max_amount","reliability_score"]);
 </script>
 
 </body>
