@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Swap | p2p‑x</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="p-4 bg-blue-900 text-white">
+  <h1 class="text-xl font-bold">واجهة Swap الرسمية</h1>
+  <p class="text-xs opacity-80">تنفيذ عمليات التبادل عبر أفضل بروتوكول أو Market Maker.</p>
+</div>
+
+<div class="p-4 max-w-xl mx-auto bg-white rounded shadow mt-4">
+  <label class="block text-sm mb-1">شبكة من</label>
+  <input id="src_network" class="w-full border rounded px-2 py-1 mb-2" value="Ethereum">
+
+  <label class="block text-sm mb-1">شبكة إلى</label>
+  <input id="dst_network" class="w-full border rounded px-2 py-1 mb-2" value="Arbitrum">
+
+  <label class="block text-sm mb-1">عملة من</label>
+  <input id="src_token" class="w-full border rounded px-2 py-1 mb-2" value="USDT">
+
+  <label class="block text-sm mb-1">عملة إلى</label>
+  <input id="dst_token" class="w-full border rounded px-2 py-1 mb-2" value="USDC">
+
+  <label class="block text-sm mb-1">الكمية</label>
+  <input id="amount" type="number" class="w-full border rounded px-2 py-1 mb-4" value="100">
+
+  <button onclick="doSwap()" class="bg-blue-600 text-white px-4 py-2 rounded text-sm">
+    تنفيذ Swap
+  </button>
+
+  <div id="result" class="mt-4 text-xs"></div>
+</div>
+
+<script>
+async function doSwap() {
+  const p = new URLSearchParams({
+    src_network: src_network.value,
+    dst_network: dst_network.value,
+    src_token: src_token.value,
+    dst_token: dst_token.value,
+    amount: amount.value,
+    user_id: "telegram_user_id",
+    user_country: "SA"
+  });
+  const res = await fetch(`/smart_swap?${p}`);
+  const data = await res.json();
+  result.innerText = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
