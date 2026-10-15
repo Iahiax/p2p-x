@@ -1,10 +1,12 @@
-from backend.exchange_connectors.binance import get_binance_price
+import httpx
 
 async def mm_quote(src_token: str, dst_token: str, amount: float):
     symbol = f"{src_token}{dst_token}"  # مثل BTCUSDT
     try:
-        price = await get_binance_price(symbol)
-    except Exception:
+        async with httpx.AsyncClient() as client:
+            r = await client.get("https://api.binance.com/api/v3/ticker/price", params={"symbol": symbol})
+            price = float(r.json()["price"])
+    except:
         price = 1.0
 
     spread = 0.003
